@@ -1,0 +1,27 @@
+version: '2.36.0'
+
+services:
+  pg:
+    image: postgres:alpine
+    container_name: footballbot_db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 1
+    ports:
+      - 5434:5432
+    volumes:
+      - pg_data:/var/lib/postgresql
+
+  footballbot:
+    build: .
+    image: footballbot:alpine
+    container_name: footballbot_con
+    restart: always
+    depends_on:
+      - pg
+    command: sh -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    ports:
+      - '8000:8000'
+
+volumes:
+  pg_data:
