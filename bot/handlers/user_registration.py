@@ -10,7 +10,7 @@ from aiogram import types
 
 router = Router()
 admin_chat_id = -4869221063
-my_chat_id = 7041377088
+my_chat_id = 528077024
 
 
 class RegisterState(StatesGroup):
@@ -72,7 +72,7 @@ class GameRegState(StatesGroup):
 @router.callback_query(F.data == "register_game")
 async def handle_register_game(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer(
-        "Чтобы записаться на ближайший матч, переведи сумму 50000 сум на карту: 8600 1234 5678 9012\n"
+        "Чтобы записаться на ближайший матч, переведи сумму 1000 тг на карту: +7 707 495 17 99 (Kaspi Мирас) 4400430244219793\n"
         "После оплаты, пожалуйста, пришли скриншот или фото чека сюда."
     )
     await state.set_state(GameRegState.waiting_for_receipt)

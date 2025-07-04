@@ -12,6 +12,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+import os
+from datetime import timedelta
+from pathlib import Path
+
+import environ
+from dotenv import load_dotenv
+
+load_dotenv()
+env = environ.Env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -74,16 +84,7 @@ WSGI_APPLICATION = 'FootballBot.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'footballbot_db',         # название твоей БД
-        'USER': 'postgres',        # пользователь PostgreSQL
-        'PASSWORD': '1',   # пароль
-        'HOST': 'localhost',           # или IP адрес сервера
-        'PORT': '5432',                # стандартный порт PostgreSQL
-    }
-}
+DATABASES = {"default": env.db("DATABASE_URL")}
 
 
 
@@ -116,6 +117,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
 
 
 # Static files (CSS, JavaScript, Images)
