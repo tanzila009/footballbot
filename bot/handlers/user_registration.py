@@ -9,7 +9,7 @@ from football_app.models import Player
 from aiogram import types
 
 router = Router()
-admin_chat_id = -4869221063
+group_chat_id = -4857084459
 my_chat_id = 528077024
 
 
@@ -44,7 +44,7 @@ async def finish_registration(message: Message, state: FSMContext):
     )
 
     await message.bot.send_message(
-        chat_id=admin_chat_id,
+        chat_id=group_chat_id,
         text=f"✅ Новый игрок зарегистрировался:\n\n👤 Имя: {name}\n📞 Телефон: {phone}\n🆔 Telegram ID: {telegram_id}"
     )
 
@@ -110,18 +110,18 @@ async def handle_receipt(message: Message, state: FSMContext):
     await message.answer("Спасибо! Твоя заявка отправлена на проверку.")
 
     await message.bot.send_message(
-        chat_id=admin_chat_id,
+        chat_id=group_chat_id,
         text=f"📥 Новый чек от игрока:\n👤 Имя: {full_name}\n📞 Телефон: {phone}"
     )
 
     if message.photo:
-        await message.bot.send_photo(chat_id=admin_chat_id, photo=message.photo[-1].file_id)
+        await message.bot.send_photo(chat_id=group_chat_id, photo=message.photo[-1].file_id)
     elif message.document:
-        await message.bot.send_document(chat_id=admin_chat_id, document=message.document.file_id)
+        await message.bot.send_document(chat_id=group_chat_id, document=message.document.file_id)
 
     await state.clear()
 
-@router.message(F.text == "/напомнить")
+@router.message(F.text == "/remind")
 async def remind_players(message: Message):
     if message.chat.id != my_chat_id:
         return  # Только админ может запускать
@@ -142,4 +142,22 @@ async def remind_players(message: Message):
             print(f"Не удалось отправить игроку {player.telegram_id}: {e}")
 
     await message.answer(f"✅ Напоминание отправлено {success_count} участникам.")
+
+@router.message(F.text == "/players")
+async def list_registered_players(message: Message):
+    if message.chat.id != my_chat_id:
+        return  # Только админ может просматривать список
+
+    players = await sync_to_async(list)(Player.objects.all())
+
+    if not players:
+        await message.answer("Нет зарегистрированных игроков.")
+        return
+
+    msg = "📋 <b>Список зарегистрированных игроков:</b>\n\n"
+    for idx, player in enumerate(players, start=1):
+        msg += f"{idx}. 👤 {player.full_name} | 📞 {player.phone}\n"
+
+    await message.answer(msg, parse_mode="HTML")
+
 
