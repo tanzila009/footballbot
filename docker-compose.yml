@@ -6,7 +6,7 @@ services:
     container_name: footballbot_db
     restart: always
     environment:
-      POSTGRES_DB: footballbot_db       # добавь
+      POSTGRES_DB: footballbot     # добавь
       POSTGRES_USER: postgres           # добавь
       POSTGRES_PASSWORD: 1
     ports:

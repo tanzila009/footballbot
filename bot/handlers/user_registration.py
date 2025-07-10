@@ -9,7 +9,7 @@ from football_app.models import Player
 from aiogram import types
 
 router = Router()
-group_chat_id = -4857084459
+group_chat_id = -1002761093639
 my_chat_id = 528077024
 
 
